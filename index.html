@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="gu" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ગુજરાતી વ્યાકરણ ગુરુ - સ્પર્ધાત્મક પરીક્ષા</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        xblack: '#000000',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #developer-slider::-webkit-scrollbar { width: 6px; }
+        #developer-slider::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark #developer-slider::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        .glass-header {
+            background: rgba(29, 78, 216, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .dark .glass-header { background: rgba(30, 58, 138, 0.9); }
+        
+        /* Modal Animation */
+        .modal-enter { animation: modalEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes modalEnter {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased flex flex-col min-h-screen selection:bg-blue-300 selection:text-blue-900">
+
+    <header class="glass-header text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+            
+            <div class="flex items-center gap-2 cursor-pointer group" onclick="navigate('home')">
+                <div class="bg-white/20 p-2 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h1 class="text-lg md:text-2xl font-bold tracking-wide hidden sm:block">વ્યાકરણ ગુરુ</h1>
+            </div>
+
+            <nav class="flex items-center gap-2 md:gap-4">
+                <button onclick="navigate('home')" class="hover:text-yellow-300 transition-colors font-semibold text-sm md:text-base hidden md:block">વાંચન (Learn)</button>
+                <button onclick="navigate('quiz-setup')" class="bg-yellow-400 text-blue-900 px-3 md:px-5 py-1.5 md:py-2 rounded-full font-bold text-xs md:text-sm hover:bg-yellow-300 transition-all shadow-md transform hover:-translate-y-0.5">ટેસ્ટ આપો</button>
+                
+                <div class="w-px h-6 bg-white/30 mx-1 md:mx-2"></div>
+                
+                <!-- Login/Profile Button -->
+                <button id="auth-btn" onclick="toggleAuthModal()" class="flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-all text-sm font-semibold">
+                    <span id="auth-btn-text">લોગિન</span>
+                </button>
+
+                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/20 transition-colors" title="Toggle Dark Mode">
+                    <svg id="theme-icon-sun" class="w-5 h-5 md:w-6 md:h-6 hidden dark:block text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="theme-icon-moon" class="w-5 h-5 md:w-6 md:h-6 block dark:hidden text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+
+                <!-- Developer Profile Button -->
+                <button onclick="toggleSlider()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-2 py-1 md:px-3 md:py-1.5 rounded-full transition-all border border-white/20" title="Developer Info">
+                    <img src="https://raw.githubusercontent.com/RajBaria/my-downloads/main/rajdp.png" onerror="this.src='https://ui-avatars.com/api/?name=Raj+Baria&background=random'" alt="Raj Baria" class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border border-white/50">
+                    <span class="text-xs md:text-sm font-semibold hidden md:block">Raj Baria</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="app" class="container mx-auto px-4 py-8 flex-grow transition-colors duration-300">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Google Ads Placeholder -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="w-full bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-xl p-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center justify-center min-h-[120px]">
+            <span class="text-sm font-bold uppercase tracking-widest mb-1">Advertisement</span>
+            <span>અહીં Google Ads મૂકવામાં આવશે (Place AdSense code here)</span>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 dark:bg-black text-gray-400 text-center py-6 mt-auto transition-colors duration-300">
+        <p>© 2026 વ્યાકરણ ગુરુ - GCERT મુજબ</p>
+        <p class="text-xs mt-2 text-gray-500">Created by <a href="#" onclick="toggleSlider()" class="hover:text-white transition-colors">Raj Baria</a></p>
+    </footer>
+
+    <!-- Overlay -->
+    <div id="slider-overlay" class="fixed inset-0 bg-black/60 z-50 hidden backdrop-blur-sm transition-opacity" onclick="closeAllModals()"></div>
+
+    <!-- Developer Slider -->
+    <aside id="developer-slider" class="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white dark:bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[60] overflow-y-auto flex flex-col rounded-l-2xl border-l border-gray-200 dark:border-gray-700">
+        <button onclick="toggleSlider()" class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-red-500 transition-colors z-20 backdrop-blur-md">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="relative h-40 bg-gray-200 w-full">
+            <img src="https://raw.githubusercontent.com/RajBaria/my-downloads/main/1788200164.jpg" onerror="this.src='https://placehold.co/600x200/2563eb/ffffff?text=Developer'" alt="Cover" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        </div>
+        <div class="px-6 pb-6 text-center relative flex-grow">
+            <div class="relative inline-block -mt-16 mb-3">
+                <img src="https://raw.githubusercontent.com/RajBaria/my-downloads/main/rajdp.png" onerror="this.src='https://ui-avatars.com/api/?name=Raj+Baria&background=random'" alt="Raj Baria" class="w-28 h-28 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-xl bg-white">
+                <span class="absolute bottom-1 right-2 bg-green-500 w-4 h-4 border-2 border-white dark:border-gray-800 rounded-full" title="Online"></span>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Raj Baria</h2>
+            <p class="text-blue-600 dark:text-blue-400 font-semibold text-sm mb-1">Web Developer & Creator</p>
+            <div class="space-y-3 mt-6">
+                <a href="https://x.com/raj_baria" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 shadow-sm"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg><span>@raj_baria</span></a>
+                <a href="https://www.instagram.com/rajsbaria/" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-white shadow-sm" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>rajsbaria</span></a>
+                <a href="https://www.facebook.com/share/1EK5jqWrK9/" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-white bg-[#1877F2] hover:bg-[#166fe5] shadow-sm"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span>Raj Baria</span></a>
+                <a href="https://wa.me/916352840795" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-white bg-[#25D366] hover:bg-[#20bd5a] shadow-sm"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>+91 63528 40795</span></a>
+                <a href="mailto:rk3171998@gmail.com" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm"><svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg><span class="truncate">rk3171998@gmail.com</span></a>
+                <a href="https://rajbaria.github.io/my-downloads/" target="_blank" class="flex items-center gap-3 px-4 py-3 mt-4 rounded-xl text-sm font-bold transition-all text-white shadow-lg transform hover:-translate-y-1" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg><span class="flex-grow text-center">My Downloads (Website)</span></a>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-8 mb-2">Designed by Raj Baria © 2026</p>
+        </div>
+    </aside>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/60 z-[70] hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl relative modal-enter">
+            <button onclick="closeAllModals()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            
+            <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center dark:text-white">લોગિન કરો</h2>
+            
+            <div id="auth-error" class="hidden bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium"></div>
+
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ઈમેલ એડ્રેસ</label>
+                    <input type="email" id="auth-email" required class="w-full px-4 py-2 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div id="password-group">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">પાસવર્ડ</label>
+                    <input type="password" id="auth-password" class="w-full px-4 py-2 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                
+                <button type="submit" id="auth-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-md">લોગિન</button>
+            </form>
+
+            <div class="mt-6 text-center space-y-2 text-sm">
+                <button onclick="switchAuthMode('register')" id="auth-switch-register" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold block w-full">નવું એકાઉન્ટ બનાવો (Register)</button>
+                <button onclick="switchAuthMode('login')" id="auth-switch-login" class="hidden text-blue-600 dark:text-blue-400 hover:underline font-semibold block w-full">પહેલેથી એકાઉન્ટ છે? લોગિન કરો</button>
+                <button onclick="switchAuthMode('reset')" id="auth-switch-reset" class="text-gray-500 dark:text-gray-400 hover:underline block w-full mt-2">પાસવર્ડ ભૂલી ગયા છો? (Reset)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Subscription Modal -->
+    <div id="premium-modal" class="fixed inset-0 bg-black/60 z-[70] hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl relative modal-enter border-t-8 border-yellow-400">
+            <button onclick="closeAllModals()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            
+            <div class="text-center">
+                <div class="text-5xl mb-4">👑</div>
+                <h2 class="text-2xl md:text-3xl font-black mb-2 text-gray-800 dark:text-white">પ્રીમિયમ સબસ્ક્રિપ્શન</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 font-medium">માત્ર ₹1999 માં સંપૂર્ણ કોર્સ અનલોક કરો.</p>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/30 p-5 rounded-2xl mb-6">
+                <h3 class="font-bold text-blue-800 dark:text-blue-300 mb-3 border-b border-blue-200 dark:border-blue-700/50 pb-2">પ્રીમિયમ ફાયદાઓ:</h3>
+                <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                    <li class="flex items-center gap-2">✅ <span>તમામ વ્યાકરણના ટોપિક્સ (Unlock All)</span></li>
+                    <li class="flex items-center gap-2">✅ <span>રોજબરોજની ઓનલાઈન ટેસ્ટ (Daily Tests)</span></li>
+                    <li class="flex items-center gap-2">✅ <span>ઇન્ટરેક્ટિવ નોટ્સ અને મટિરિયલ (Notes)</span></li>
+                    <li class="flex items-center gap-2">✅ <span>ભણવા માટે PPT ફાઈલો</span></li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col items-center mb-6">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">નીચેના QR કોડ પર પેમેન્ટ કરો:</p>
+                <!-- Generating QR Code for UPI dynamically -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rk3171998@oksbi%26pn=Raj%20Baria%26am=1999%26cu=INR" alt="UPI QR Code" class="w-40 h-40 rounded-xl shadow-md border-4 border-white mb-2">
+                <p class="font-bold text-gray-800 dark:text-white tracking-wide">UPI ID: rk3171998@oksbi</p>
+            </div>
+
+            <button onclick="verifyPayment()" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 font-black py-4 rounded-xl transition-all shadow-lg transform hover:scale-[1.02]">
+                મેં પેમેન્ટ કરી દીધું છે (Verify)
+            </button>
+            <p class="text-xs text-center text-gray-400 mt-4">નોંધ: પેમેન્ટ કર્યા બાદ બટન પર ક્લિક કરો.</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl transition-all duration-300 opacity-0 translate-y-10 z-[100] font-medium text-sm">
+        Message here
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gujarati-grammar-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch(e) { console.error("Firebase init error", e); }
+
+        window.appState = { 
+            view: 'home', 
+            selectedTopicId: null, 
+            quizActiveQuestions: [], 
+            currentQIndex: 0, 
+            userAnswers: [], 
+            score: 0,
+            user: null,
+            isPremium: false,
+            authMode: 'login' // login, register, reset
+        };
+
+        // Initialize Authentication for Canvas context
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e){}
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            appState.user = user;
+            if (user && !user.isAnonymous) {
+                document.getElementById('auth-btn-text').innerText = "પ્રોફાઈલ / લોગઆઉટ";
+                await checkPremiumStatus(user.uid);
+            } else {
+                document.getElementById('auth-btn-text').innerText = "લોગિન / સાઈનઅપ";
+                appState.isPremium = false;
+                window.render();
+            }
+        });
+
+        async function checkPremiumStatus(uid) {
+            try {
+                const userRef = doc(db, 'artifacts', appId, 'users', uid);
+                const docSnap = await getDoc(userRef);
+                if (docSnap.exists()) {
+                    appState.isPremium = docSnap.data().isPremium || false;
+                } else {
+                    appState.isPremium = false;
+                }
+                window.render();
+            } catch (e) {
+                console.error("Error checking premium status", e);
+            }
+        }
+
+        // --- Data Structure (First 2 free, rest premium) ---
+        window.grammarTopics = [
+            { id: 'dhvanishreni', title: '૧. સ્વર, વ્યંજન અને ધ્વનિશ્રેણી', icon: '🔤', description: 'શબ્દમાંથી સ્વર અને વ્યંજન છૂટા પાડવાની રીત.', isFree: true, content: `<h3 class="text-xl font-bold text-blue-700 dark:text-blue-400 mb-2">ધ્વનિશ્રેણી એટલે શું?</h3><p class="mb-4">ગુજરાતી ભાષાના શબ્દો સ્વર અને વ્યંજનના જોડાણથી બને છે. તેને છૂટા પાડવાની પ્રક્રિયાને ધ્વનિશ્રેણી કહે છે.</p><ul class="list-disc pl-6 space-y-2 mb-4"><li><strong>સ્વર:</strong> અ, આ, ઇ... (સ્વતંત્ર ઉચ્ચાર)</li><li><strong>વ્યંજન:</strong> ક થી જ્ઞ (સ્વરની મદદ લેવી પડે)</li></ul>` },
+            { id: 'sangna', title: '૨. સંજ્ઞા (Noun)', icon: '🏷️', description: 'વ્યક્તિ, વસ્તુ, ગુણ કે ભાવ દર્શાવતા પદો.', isFree: true, content: `<h3 class="text-xl font-bold text-blue-700 dark:text-blue-400 mb-2">સંજ્ઞાના મુખ્ય પ્રકારો:</h3><ul class="list-disc pl-6 space-y-2"><li>વ્યક્તિવાચક (ગંગા)</li><li>જાતિવાચક (નદી)</li><li>સમૂહવાચક (ટોળું)</li><li>દ્રવ્યવાચક (પાણી)</li><li>ભાવવાચક (પ્રેમ)</li></ul>` },
+            { id: 'visheshan', title: '૩. વિશેષણ (Adjective)', icon: '🎨', description: 'નામ ના અર્થમાં વધારો કરતા પદો.', isFree: false, content: `<h3 class="text-xl font-bold text-blue-700 dark:text-blue-400 mb-2">વિશેષણ:</h3><p>ગુણવાચક, સંખ્યાવાચક, પરિમાણવાચક વિશેષણની સમજૂતી.</p>` },
+            { id: 'kriyapad', title: '૪. ક્રિયાપદ અને પ્રયોગો', icon: '🏃', description: 'કર્તરિ, કર્મણિ, ભાવે અને પ્રેરક વાક્ય.', isFree: false, content: `<h3 class="text-xl font-bold text-blue-700">ક્રિયાપદના પ્રયોગો:</h3><p>કર્તરિ, કર્મણિ અને ભાવે પ્રયોગ.</p>` },
+            { id: 'nipat', title: '૫. નિપાત (Nipat)', icon: '📌', description: 'ભારવાચક, સીમાવાચક નિપાત.', isFree: false, content: `<h3 class="text-xl font-bold text-blue-700">નિપાત:</h3><p>જ, તો, ય, પણ, સુદ્ધાં જેવા પદો.</p>` },
+            { id: 'krudant', title: '૬. કૃદંત (Krudant)', icon: '🔗', description: 'વર્તમાન, ભૂત, ભવિષ્ય કૃદંત.', isFree: false, content: `<p>વર્તમાન (તો), ભૂત (ય, એલ), ભવિષ્ય (નાર).</p>` },
+            { id: 'sanyojak', title: '૭. સંયોજક (Conjunction)', icon: '🖇️', description: 'વાક્યોને જોડતા શબ્દો.', isFree: false, content: `<p>અને, પણ, પરંતુ, કારણ કે.</p>` },
+            { id: 'vibhakti', title: '૮. વિભક્તિ (Cases)', icon: '📊', description: 'નામ/સર્વનામનો અન્ય પદો સાથે સંબંધ.', isFree: false, content: `<p>પ્રથમા થી અષ્ટમી વિભક્તિના પ્રત્યયો.</p>` },
+            { id: 'chhand', title: '૯. છંદ (Chhand)', icon: '🎼', description: 'અક્ષરમેળ અને માત્રામેળ છંદ.', isFree: false, content: `<p>શિખરિણી, મંદાક્રાંતા, ચોપાઈ વગેરે.</p>` },
+            { id: 'viramchihno', title: '૧૦. વિરામચિહ્નો', icon: '⏸️', description: 'વાક્યમાં અટકવાના સ્થાનો.', isFree: false, content: `<p>પૂર્ણવિરામ, અલ્પવિરામ, ઉદ્ગારચિહ્ન.</p>` },
+            { id: 'shabdkosh', title: '૧૧. શબ્દકોશ ક્રમ', icon: '📖', description: 'કક્કાવારી અને સ્વર પ્રમાણે ગોઠવણી.', isFree: false, content: `<p>સ્વર પહેલા, પછી વ્યંજન. ક્ષ અને જ્ઞ નો ક્રમ.</p>` }
+        ];
+
+        window.quizQuestions = [
+            { q: "નીચેનામાંથી કયો શબ્દ જોડાક્ષર 'ક્ષ' નો સાચો ધ્વનિવિગ્રહ છે?", options: ["ક + ષ", "ક્ + ષ્ + અ", "ખ + ષ", "શ + ક + અ"], ans: 1, topic: "ધ્વનિશ્રેણી", explanation: "'ક્ષ' એ 'ક્ + ષ્ + અ' છે." },
+            { q: "'ગંગા' એ કયા પ્રકારની સંજ્ઞા છે?", options: ["જાતિવાચક", "ભાવવાચક", "વ્યક્તિવાચક", "સમૂહવાચક"], ans: 2, topic: "સંજ્ઞા", explanation: "ગંગા એ ચોક્કસ નદીનું નામ છે." },
+            { q: "કર્મણિ વાક્ય શોધો.", options: ["રમેશ દોડે છે.", "રમેશથી પુસ્તક વંચાય છે.", "શિક્ષક વંચાવે છે.", "હું જાવ છું."], ans: 1, topic: "ક્રિયાપદ", explanation: "કર્તાને 'થી' અને ધાતુને 'આ' પ્રત્યય." },
+            { q: "કૃદંતનો પ્રકાર ઓળખાવો: 'પડતો માણસ'", options: ["વર્તમાન", "ભૂત", "ભવિષ્ય", "સંબંધક"], ans: 0, topic: "કૃદંત", explanation: "'તો' પ્રત્યય વર્તમાન કૃદંત દર્શાવે છે." },
+            { q: "વિભક્તિ: 'બાણથી માર્યો' માં 'બાણથી' શું છે?", options: ["પ્રથમા", "દ્વિતીયા", "તૃતીયા", "પંચમી"], ans: 2, topic: "વિભક્તિ", explanation: "સાધન (કરણ) દર્શાવે છે એટલે તૃતીયા." }
+        ];
+
+        window.showToast = function(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
+        }
+
+        window.toggleTheme = function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        window.toggleSlider = function() {
+            document.getElementById('developer-slider').classList.toggle('translate-x-full');
+            document.getElementById('slider-overlay').classList.toggle('hidden');
+        }
+
+        window.closeAllModals = function() {
+            document.getElementById('developer-slider').classList.add('translate-x-full');
+            document.getElementById('slider-overlay').classList.add('hidden');
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('premium-modal').classList.add('hidden');
+        }
+
+        window.navigate = function(view, param = null) {
+            if(view === 'topic' && param) {
+                const topic = window.grammarTopics.find(t => t.id === param);
+                if(!topic.isFree && !appState.isPremium) {
+                    window.showPremiumModal();
+                    return;
+                }
+                appState.selectedTopicId = param;
+            }
+            appState.view = view;
+            window.render();
+            window.scrollTo(0, 0);
+        }
+
+        window.toggleAuthModal = async function() {
+            if(appState.user && !appState.user.isAnonymous) {
+                if(confirm("શું તમે ખરેખર લોગઆઉટ કરવા માંગો છો?")) {
+                    await signOut(auth);
+                    showToast("સફળતાપૂર્વક લોગઆઉટ થયા.");
+                }
+            } else {
+                document.getElementById('auth-modal').classList.remove('hidden');
+                document.getElementById('slider-overlay').classList.remove('hidden');
+                window.switchAuthMode('login');
+            }
+        }
+
+        window.switchAuthMode = function(mode) {
+            appState.authMode = mode;
+            document.getElementById('auth-error').classList.add('hidden');
+            const title = document.getElementById('auth-title');
+            const btn = document.getElementById('auth-submit-btn');
+            const passGroup = document.getElementById('password-group');
+            
+            document.getElementById('auth-switch-register').classList.add('hidden');
+            document.getElementById('auth-switch-login').classList.add('hidden');
+            document.getElementById('auth-switch-reset').classList.add('hidden');
+
+            if(mode === 'login') {
+                title.innerText = "લોગિન કરો";
+                btn.innerText = "લોગિન";
+                passGroup.classList.remove('hidden');
+                document.getElementById('auth-password').required = true;
+                document.getElementById('auth-switch-register').classList.remove('hidden');
+                document.getElementById('auth-switch-reset').classList.remove('hidden');
+            } else if(mode === 'register') {
+                title.innerText = "નવું એકાઉન્ટ બનાવો";
+                btn.innerText = "રજીસ્ટર કરો";
+                passGroup.classList.remove('hidden');
+                document.getElementById('auth-password').required = true;
+                document.getElementById('auth-switch-login').classList.remove('hidden');
+            } else if(mode === 'reset') {
+                title.innerText = "પાસવર્ડ રીસેટ લિંક મેળવો";
+                btn.innerText = "લિંક મોકલો (Send OTP/Link)";
+                passGroup.classList.add('hidden');
+                document.getElementById('auth-password').required = false;
+                document.getElementById('auth-switch-login').classList.remove('hidden');
+            }
+        }
+
+        window.handleAuth = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errDiv = document.getElementById('auth-error');
+            errDiv.classList.add('hidden');
+
+            try {
+                if(appState.authMode === 'login') {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showToast("સફળતાપૂર્વક લોગિન!");
+                    closeAllModals();
+                } else if(appState.authMode === 'register') {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    // Initialize free profile
+                    await setDoc(doc(db, 'artifacts', appId, 'users', cred.user.uid), { isPremium: false });
+                    showToast("એકાઉન્ટ બની ગયું છે!");
+                    closeAllModals();
+                } else if(appState.authMode === 'reset') {
+                    await sendPasswordResetEmail(auth, email);
+                    showToast("પાસવર્ડ રીસેટ લિંક ઈમેલ પર મોકલી છે.");
+                    switchAuthMode('login');
+                }
+            } catch (error) {
+                errDiv.innerText = "ભૂલ: " + error.message;
+                errDiv.classList.remove('hidden');
+            }
+        }
+
+        window.showPremiumModal = function() {
+            if(!appState.user || appState.user.isAnonymous) {
+                showToast("કૃપા કરીને પહેલા લોગિન કરો.");
+                toggleAuthModal();
+                return;
+            }
+            document.getElementById('premium-modal').classList.remove('hidden');
+            document.getElementById('slider-overlay').classList.remove('hidden');
+        }
+
+        window.verifyPayment = async function() {
+            if(!appState.user) return;
+            try {
+                const userRef = doc(db, 'artifacts', appId, 'users', appState.user.uid);
+                await setDoc(userRef, { isPremium: true }, { merge: true });
+                appState.isPremium = true;
+                closeAllModals();
+                showToast("અભિનંદન! તમારું સબસ્ક્રિપ્શન એક્ટિવ થઈ ગયું છે. 🎊");
+                window.render();
+            } catch(e) {
+                showToast("ભૂલ: " + e.message);
+            }
+        }
+
+        window.render = function() {
+            const appContainer = document.getElementById('app');
+            appContainer.innerHTML = '';
+            switch (appState.view) {
+                case 'home': appContainer.innerHTML = renderHome(); break;
+                case 'topic': appContainer.innerHTML = renderTopic(appState.selectedTopicId); break;
+                case 'quiz-setup': appContainer.innerHTML = renderQuizSetup(); break;
+                case 'quiz-active': appContainer.innerHTML = renderQuizActive(); break;
+                case 'quiz-result': appContainer.innerHTML = renderQuizResult(); break;
+            }
+        }
+
+        function renderHome() {
+            let html = `
+                <div class="fade-in max-w-5xl mx-auto">
+                    <div class="text-center mb-10">
+                        <div class="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-4 py-1.5 rounded-full text-xs md:text-sm font-bold mb-4 shadow-sm border border-blue-200 dark:border-blue-700">
+                            TET 1 | TET 2 | TAT S | TAT HS | CCE માટે ઉપયોગી
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">ગુજરાતી વ્યાકરણ ગુરુ (GCERT મુજબ)</h2>
+                        <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">સ્પર્ધાત્મક પરીક્ષાઓ માટે સંપૂર્ણ સ્ટડી મટિરિયલ. ૨૦% મટિરિયલ ફ્રી છે, બાકીના ૮૦% અને રોજીંદી ટેસ્ટ (Daily Tests), PPT ફાઈલ્સ માટે પ્રીમિયમ મેળવો.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            `;
+            window.grammarTopics.forEach(topic => {
+                const isLocked = !topic.isFree && !appState.isPremium;
+                const lockUI = isLocked ? `<div class="absolute top-4 right-4 text-2xl text-yellow-500 bg-yellow-50 dark:bg-yellow-900/30 p-2 rounded-full shadow-sm">🔒</div>` : '';
+                const cardOpacity = isLocked ? 'opacity-80 grayscale-[20%]' : '';
+                
+                html += `
+                    <div class="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all cursor-pointer border border-gray-100 dark:border-gray-700 flex items-start gap-4 hover:-translate-y-1 ${cardOpacity}" onclick="navigate('topic', '${topic.id}')">
+                        ${lockUI}
+                        <div class="text-4xl bg-blue-50 dark:bg-blue-900/30 p-3 rounded-full shadow-sm">${topic.icon}</div>
+                        <div class="pr-6">
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">${topic.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">${topic.description}</p>
+                            <span class="inline-block mt-3 ${isLocked ? 'text-yellow-600 dark:text-yellow-400' : 'text-blue-600 dark:text-blue-400'} font-semibold text-sm hover:underline">
+                                ${isLocked ? 'પ્રીમિયમ અનલોક કરો &rarr;' : 'વિગતવાર વાંચો &rarr;'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                    </div>
+                    
+                    <div class="mt-12 bg-gradient-to-r from-blue-700 to-blue-600 dark:from-blue-900 dark:to-blue-800 rounded-3xl p-8 text-center text-white shadow-2xl relative overflow-hidden">
+                        <div class="relative z-10">
+                            <h2 class="text-2xl font-bold mb-4">તૈયારી ચકાસવા માંગો છો?</h2>
+                            <p class="mb-6 text-blue-100 max-w-lg mx-auto">વ્યાકરણના તમામ ટોપિક્સની મિક્સ ટેસ્ટ આપીને તમારું નોલેજ ચેક કરો. પ્રીમિયમ યુઝર્સ માટે દૈનિક નવી ટેસ્ટ!</p>
+                            <button onclick="navigate('quiz-setup')" class="bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-colors shadow-lg transform hover:scale-105">
+                                ટેસ્ટ શરૂ કરો
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function renderTopic(topicId) {
+            const topic = window.grammarTopics.find(t => t.id === topicId);
+            return `
+                <div class="fade-in max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-10 shadow-xl border-t-8 border-blue-600">
+                    <button onclick="navigate('home')" class="mb-8 text-gray-500 hover:text-blue-600 inline-block px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">&larr; પાછા જાવ</button>
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b dark:border-gray-700">
+                        <span class="text-5xl bg-blue-50 dark:bg-blue-900/30 p-4 rounded-2xl">${topic.icon}</span>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">${topic.title}</h2>
+                    </div>
+                    <div class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg grammar-content space-y-4">
+                        ${topic.content}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuizSetup() {
+            return `
+                <div class="fade-in max-w-xl mx-auto bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center mt-10">
+                    <div class="text-6xl mb-6">🎯</div>
+                    <h2 class="text-3xl font-black text-gray-800 dark:text-white mb-2">વ્યાકરણ મોક ટેસ્ટ</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 font-medium"> ${appState.isPremium ? 'પ્રીમિયમ લાઈવ ટેસ્ટ (૧૦ પ્રશ્નો)' : 'ફ્રી ડેમો ટેસ્ટ (૩ પ્રશ્નો)'} </p>
+                    
+                    <button onclick="window.startQuiz()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-xl hover:bg-green-700 transition-all shadow-lg transform hover:-translate-y-1">
+                        ટેસ્ટ શરૂ કરો &rarr;
+                    </button>
+                    
+                    ${!appState.isPremium ? `<p class="mt-4 text-sm text-yellow-600 font-bold cursor-pointer hover:underline" onclick="showPremiumModal()">સંપૂર્ણ ટેસ્ટ આપવા પ્રીમિયમ લોક ખોલો 🔒</p>` : ''}
+                </div>
+            `;
+        }
+
+        window.startQuiz = function() {
+            const qCount = appState.isPremium ? 10 : 3;
+            appState.quizActiveQuestions = [...window.quizQuestions].sort(() => 0.5 - Math.random()).slice(0, qCount);
+            appState.currentQIndex = 0;
+            appState.userAnswers = [];
+            appState.score = 0;
+            window.navigate('quiz-active');
+        }
+
+        function renderQuizActive() {
+            const qData = appState.quizActiveQuestions[appState.currentQIndex];
+            let optionsHtml = '';
+            qData.options.forEach((opt, idx) => {
+                optionsHtml += `<button onclick="window.selectAnswer(${idx})" class="w-full text-left p-4 mb-3 border-2 dark:border-gray-600 rounded-xl hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all font-medium text-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800"><span class="font-bold mr-2 text-blue-600">${String.fromCharCode(65 + idx)}.</span> ${opt}</button>`;
+            });
+
+            return `
+                <div class="fade-in max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <div class="flex justify-between text-sm text-gray-500 font-bold mb-3">
+                            <span>પ્રશ્ન ${appState.currentQIndex + 1} / ${appState.quizActiveQuestions.length}</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">${qData.topic}</span>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-10 shadow-xl border border-gray-100 dark:border-gray-700">
+                        <h3 class="text-xl md:text-2xl font-bold mb-8">${appState.currentQIndex + 1}. ${qData.q}</h3>
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectAnswer = function(optIndex) {
+            appState.userAnswers.push(optIndex);
+            if (optIndex === appState.quizActiveQuestions[appState.currentQIndex].ans) appState.score++;
+            if (appState.currentQIndex < appState.quizActiveQuestions.length - 1) {
+                appState.currentQIndex++;
+                window.render();
+            } else {
+                window.navigate('quiz-result');
+            }
+        }
+
+        function renderQuizResult() {
+            const total = appState.quizActiveQuestions.length;
+            let reviewHtml = `<div class="space-y-6 mt-10">`;
+            appState.quizActiveQuestions.forEach((q, idx) => {
+                const isCorrect = appState.userAnswers[idx] === q.ans;
+                reviewHtml += `
+                    <div class="border-2 rounded-2xl p-6 ${isCorrect ? 'border-green-300 bg-green-50 dark:bg-green-900/10' : 'border-red-300 bg-red-50 dark:bg-red-900/10'}">
+                        <p class="font-bold text-lg mb-2">${idx + 1}. ${q.q}</p>
+                        <p class="text-sm">સાચો જવાબ: <strong>${q.options[q.ans]}</strong></p>
+                        <div class="mt-2 text-gray-700 dark:text-gray-300 text-sm bg-white dark:bg-gray-800 p-3 rounded-xl shadow-inner"><strong>સમજૂતી:</strong> ${q.explanation}</div>
+                    </div>
+                `;
+            });
+            reviewHtml += `</div>`;
+
+            return `
+                <div class="fade-in max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl font-black mb-6 text-gray-800 dark:text-white">પરિણામ</h2>
+                    <div class="text-6xl font-black text-blue-600 mb-8">${appState.score} / ${total}</div>
+                    <button onclick="navigate('home')" class="bg-gray-200 dark:bg-gray-700 px-8 py-3 rounded-full font-bold">હોમ પર પાછા જાવ</button>
+                    ${reviewHtml}
+                </div>
+            `;
+        }
+
+        // Initial Render
+        setTimeout(() => window.render(), 100);
+    </script>
+</body>
+</html>
