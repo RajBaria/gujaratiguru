@@ -283,6 +283,15 @@
             { id: 'shabdkosh', title: '૧૧. શબ્દકોશ ક્રમ', icon: '📖', description: 'કક્કાવારી અને સ્વર પ્રમાણે ગોઠવણી.', isFree: false, content: `<p>સ્વર પહેલા, પછી વ્યંજન. ક્ષ અને જ્ઞ નો ક્રમ.</p>` }
         ];
 
+        // ભવિષ્યમાં ઉમેરવાની ફાઈલો માટેની લિંક્સ (GitHub Pages માટે)
+        window.futureLinks = [
+            { title: 'સાહિત્યકારોનો પરિચય (Coming Soon)', url: './sahitya.html', icon: '📚' },
+            { title: 'અગાઉની પરીક્ષાના પેપર', url: './old-papers.html', icon: '📝' },
+            { title: 'કરંટ અફેર્સ', url: './current-affairs.html', icon: '🌍' },
+            // ભવિષ્યમાં તમે અહીં આ રીતે નવી લિંક ઉમેરી શકશો:
+            // { title: 'નવું પેજ', url: './tamari-file-nu-nam.html', icon: '📌' },
+        ];
+
         window.quizQuestions = [
             { q: "નીચેનામાંથી કયો શબ્દ જોડાક્ષર 'ક્ષ' નો સાચો ધ્વનિવિગ્રહ છે?", options: ["ક + ષ", "ક્ + ષ્ + અ", "ખ + ષ", "શ + ક + અ"], ans: 1, topic: "ધ્વનિશ્રેણી", explanation: "'ક્ષ' એ 'ક્ + ષ્ + અ' છે." },
             { q: "'ગંગા' એ કયા પ્રકારની સંજ્ઞા છે?", options: ["જાતિવાચક", "ભાવવાચક", "વ્યક્તિવાચક", "સમૂહવાચક"], ans: 2, topic: "સંજ્ઞા", explanation: "ગંગા એ ચોક્કસ નદીનું નામ છે." },
@@ -474,9 +483,27 @@
                     </div>
                 `;
             });
+
             html += `
                     </div>
                     
+                    <!-- Future Links Section (અન્ય ઉપયોગી મટિરિયલ) -->
+                    <div class="mt-12">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 border-b-2 border-blue-500 inline-block pb-1">અન્ય ઉપયોગી મટિરિયલ (More Resources)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            `;
+            window.futureLinks.forEach(link => {
+                html += `
+                    <a href="${link.url}" class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all hover:-translate-y-1 group">
+                        <span class="text-3xl group-hover:scale-110 transition-transform">${link.icon}</span>
+                        <span class="font-bold text-gray-700 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${link.title}</span>
+                    </a>
+                `;
+            });
+            html += `
+                        </div>
+                    </div>
+
                     <div class="mt-12 bg-gradient-to-r from-blue-700 to-blue-600 dark:from-blue-900 dark:to-blue-800 rounded-3xl p-8 text-center text-white shadow-2xl relative overflow-hidden">
                         <div class="relative z-10">
                             <h2 class="text-2xl font-bold mb-4">તૈયારી ચકાસવા માંગો છો?</h2>
